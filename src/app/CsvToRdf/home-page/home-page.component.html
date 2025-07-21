@@ -1,0 +1,101 @@
+<div class="min-h-screen bg-gradient-to-b from-rose-400 to-purple-700">
+  <!-- Header -->
+  <header class="bg-white/10 backdrop-blur-sm border-b border-white/20">
+    <div class="container mx-auto px-4 py-6">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-white/20 rounded-lg">
+          <!-- Sparkles icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414m12.728 0l-1.414-1.414M7.05 7.05L5.636 5.636" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-white">CSV to RDF Converter</h1>
+          <p class="text-white/80">Convierte tus datos CSV a formato RDF usando un schema personalizado</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- LEFT COLUMN -->
+      <div class="space-y-6">
+        <!-- CSV Upload -->
+        <div class="bg-white rounded shadow-xl p-6">
+          <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <!-- File icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Archivo CSV
+          </h2>
+          <p class="text-sm text-gray-600">Sube tu archivo CSV con los datos</p>
+          <input type="file" (change)="onCsvSelected($event)" accept=".csv" class="my-3 block" />
+        </div>
+
+        <!-- JSON Upload -->
+        <div class="bg-white rounded shadow-xl p-6">
+          <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <!-- Brain icon (simulate with code icon) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Schema JSON
+          </h2>
+          <p class="text-sm text-gray-600">Define cómo mapear tu CSV a RDF</p>
+          <input type="file" (change)="onJsonSelected($event)" accept=".json" class="my-3 block" />
+        </div>
+
+        <!-- Botón Convertir -->
+        <button
+          (click)="convertToRdf()"
+          [disabled]="isProcessing || !csvFile || !jsonFile"
+          class="w-full py-3 font-semibold text-white bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 rounded-lg shadow-lg flex items-center justify-center gap-2"
+        >
+          <!-- Settings icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.82 2.82l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.82-2.82l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.82-2.82l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.82 2.82l-.06.06a1.65 1.65 0 00-.33 1.82V9c0 .66.39 1.26 1 1.51a1.65 1.65 0 001.51 0H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ isProcessing ? 'Procesando...' : 'Convertir a RDF' }}
+        </button>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="space-y-6">
+        <!-- Preview -->
+        <div class="bg-white rounded shadow-xl p-6">
+          <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <!-- Code icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Previsualización TTL
+          </h2>
+          <textarea
+            class="w-full h-[350px] font-mono text-sm bg-gray-900 text-green-400 p-3 rounded"
+            [value]="ttlPreview || '// El archivo TTL aparecerá aquí después de la conversión...'"
+            readonly
+          ></textarea>
+        </div>
+
+        <!-- Download Button -->
+        <div class="bg-white rounded shadow-xl p-6 text-center">
+          <button
+            (click)="downloadTtl()"
+            [disabled]="!ttlPreview"
+            class="w-full py-3 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 rounded-lg shadow-lg flex items-center justify-center gap-2"
+          >
+            <!-- Download icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Descargar archivo .ttl
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
