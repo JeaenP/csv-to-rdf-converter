@@ -6,6 +6,6 @@ export const routes: Routes = [
     {
         path: '',
         component: HomePageComponent,
-        title: 'TechWomen'
+        title: 'CsvToRdf'
     }
 ];
