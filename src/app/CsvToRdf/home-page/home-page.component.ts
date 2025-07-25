@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component } from '@angular/core';
 import { RdfConverterService } from '../../services/rdf-converter.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-home-page',
-  imports: [],
+  imports: [NgIf],
   templateUrl: './home-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -12,6 +13,7 @@ export class HomePageComponent {
   jsonFile!: File;
   ttlPreview: string = '';
   isProcessing: boolean = false;
+  showTooltip = false;
 
   constructor(
   private converterService: RdfConverterService,
